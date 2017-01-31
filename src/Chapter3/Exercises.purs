@@ -12,21 +12,23 @@ import Data.HeytingAlgebra
 import Data.Function
 
 type Address =
-  { street :: String
-  , city   :: String
-  , state  :: String
+  { 
+    street :: String,
+    city   :: String,
+    state  :: String
   }
 
 type Entry =
-  { firstName :: String
-  , lastName  :: String
-  , address   :: Address
+  { 
+    firstName :: String,
+    lastName  :: String,
+    address   :: Address
   }
 
 type Name =
   {
-      firstName :: String,
-      lastName :: String
+    firstName :: String,
+    lastName :: String
   }
 
 type AddressBook = List Entry

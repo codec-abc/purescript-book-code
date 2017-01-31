@@ -3,26 +3,30 @@ module ExercisesChapter4
     main
   ) where
 
-import Prelude (class BooleanAlgebra)
 import Data.Ring
 import Data.Function
 import Data.Show
-import Data.Array as Array
-import Data.Maybe as Maybe
+import Data.Maybe
 import Data.Functor
 import Data.Ord
-import Data.Either.Nested (in1)
 import Data.Eq
 import Data.HeytingAlgebra
-import Control.Bind as Bind
+import Data.EuclideanRing
+import Data.Int
+import Data.List.Lazy
+import Math
 import Control.MonadZero
-import Control.Monad.Eff.Console as Console
 import Partial.Unsafe
+import Control.Bind as Bind
+import Control.Monad.Eff.Console as Console
+import Data.Array as Array
+import Data.Either.Nested (in1)
 import Node.Buffer (BufferValueType(..))
+import Prelude (class BooleanAlgebra)
 
 
 main = do
-  Console.log $ show $ pythagoreanTriple2 10
+  Console.log $ show $ pythagoreanTriple (2 * 3 * 5 * 7 * 2)
 
 isEvenInteger :: Int -> Boolean
 isEvenInteger x =
@@ -34,10 +38,10 @@ isEvenInteger x =
 isEvenIntegerR :: Array Int -> Int -> Int
 isEvenIntegerR array accum = 
   case maybeTail of 
-    Maybe.Nothing -> accum
-    Maybe.Just (x) ->
+    Nothing -> accum
+    Just (x) ->
       let 
-        headAsNumber = unsafePartial(Maybe.fromJust (maybeHeadA))
+        headAsNumber = unsafePartial(fromJust (maybeHeadA))
         oneIfEvenElseZero = 
           if isEvenInteger headAsNumber 
             then 1 
@@ -64,7 +68,6 @@ cartesianProduct a b = do
   y <- b
   pure [x,y]
 
-
 isPyTriple :: forall a.                        
   ( Eq a
   , Semiring a
@@ -74,9 +77,9 @@ isPyTriple i j k = (i * i + j * j == k * k) && i <= j
 
 pythagoreanTriple :: Int -> Array (Array Int)
 pythagoreanTriple n = do
-  i <- 1 Array... n
-  j <- 1 Array... n
-  k <- 1 Array... n
+  i <- Array.range 1 n
+  j <- Array.range 1 n
+  k <- Array.range 1 n
   guard $ isPyTriple i j k
   [[i, j, k]]
 
@@ -98,3 +101,35 @@ pythagoreanTriple2 n =
                 [] :: Array (Array Int)
   in 
     result
+
+firstFactor :: Int -> Maybe Int
+firstFactor n = if n == 1 then Nothing else Just $ firstFactor2 n 2
+
+firstFactor2 :: Int -> Int -> Int
+firstFactor2 n a = 
+  if a == n then
+    n 
+  else
+    if (toNumber n) % (toNumber a) == 0.0 then 
+      a
+    else 
+      firstFactor2 n (a + 1)
+
+factors2 :: Int -> Array Int -> Array Int
+factors2 n arr =
+  let 
+    firstFactorOfNMaybe = firstFactor n
+  in case firstFactorOfNMaybe of
+    Nothing -> 
+      arr
+    Just x ->
+      factors2 (n/x) $ Array.cons x arr 
+
+factors :: Int -> Array Int
+factors n = factors2 n []
+
+areAllValuesTrue :: Array Boolean -> Boolean
+areAllValuesTrue = foldl (&&) true
+
+count_ :: forall a. (a -> Boolean) -> Array a -> Int
+count_ f = foldl (\ accum x -> if f(x) then accum + 1 else accum) 0

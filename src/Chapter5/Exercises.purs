@@ -12,6 +12,8 @@ import Data.HeytingAlgebra
 import Data.Function
 import Math
 import Data.Foldable
+import Data.Show
+import Data.Semigroup
 
 main = do
   Console.log "hello world"
@@ -74,6 +76,16 @@ data Bounds = Bounds
     bottom :: Number,
     right  :: Number
   }
+
+instance showPoint :: Show Point where
+  show (Point p) =  "(" <> (show p.x) <> "," <> (show p.y) <> ")" 
+
+instance showShape :: Show Shape where
+  show shape = case shape of
+    Circle pos radius -> "Circle center : " <> (show pos) <> " with radius "  <> (show radius)
+    Rectangle pos w h -> "Rectangle center : " <> (show pos) <> " width "  <> (show w) <> " height " <> (show h)
+    Line a b -> "Line from : " <> (show a) <> " to " <> (show b)
+    Text pos text -> "Text at : " <> (show pos) <> " with content " <> text
 
 emptyBounds :: Bounds
 emptyBounds =
@@ -146,3 +158,13 @@ aera shape =
       0.0
     Text (Point pos) text ->
       0.0
+
+newtype Complex = Complex
+   { 
+     real :: Number,
+     imaginary :: Number
+   }
+
+instance showComplex :: Show Complex where
+  show (Complex { real : real , imaginary : imaginary}) = 
+    "(" <> (show real) <> ", " <> (show imaginary) <> "i)"

@@ -24,7 +24,22 @@ type Address = { street :: String, city :: String }
 type Person = { name :: String, address :: Address }
 
 sameCity :: Person -> Person -> Boolean
-sameCity { address: { street : a, city : b } } { address: { street : c, city : d }} = a == c && b == d
+sameCity 
+  { 
+    address: 
+      { 
+        street : a, 
+        city : b 
+      } 
+    } 
+    { 
+      address: 
+        { 
+          street : c, 
+          city : d 
+        }
+    } = 
+      a == c && b == d
 
 fromSingleton :: forall a. a -> Array a -> a
 fromSingleton defaultValue [x :: a] = x
@@ -78,10 +93,14 @@ instance showPoint :: Show Point where
 
 instance showShape :: Show Shape where
   show shape = case shape of
-    Circle pos radius -> "Circle center : " <> (show pos) <> " with radius "  <> (show radius)
-    Rectangle pos w h -> "Rectangle center : " <> (show pos) <> " width "  <> (show w) <> " height " <> (show h)
-    Line a b -> "Line from : " <> (show a) <> " to " <> (show b)
-    Text pos text -> "Text at : " <> (show pos) <> " with content " <> text
+    Circle pos radius -> 
+      "Circle center : " <> (show pos) <> " with radius "  <> (show radius)
+    Rectangle pos w h -> 
+      "Rectangle center : " <> (show pos) <> " width "  <> (show w) <> " height " <> (show h)
+    Line a b -> 
+      "Line from : " <> (show a) <> " to " <> (show b)
+    Text pos text -> 
+      "Text at : " <> (show pos) <> " with content " <> text
 
 emptyBounds :: Bounds
 emptyBounds =

@@ -3,15 +3,14 @@ module ExercisesChapter2
         main
     ) where
 
-import Prelude
-import Control.Monad.Eff
-import Control.Monad.Eff.Exception
-import Node.ReadLine
+import Prelude (Unit, bind, show, ($), (*), (==))
+import Control.Monad.Eff (Eff)
+import Control.Monad.Eff.Exception (EXCEPTION)
+import Node.ReadLine (READLINE)
 import Control.Monad.Eff.Console as Console
 import Global as G
 import Math as M
 import Node.ReadLine as Rl
-import Data.List (List(..))
 
 main :: forall t4.                  
   Eff                       

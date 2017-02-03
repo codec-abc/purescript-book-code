@@ -3,13 +3,11 @@ module ExercisesChapter3
     main
   ) where
 
+import Prelude
 import Control.Monad.Eff.Console as Console
-import Data.List
-import Data.Semigroup
-import Data.Maybe
-import Data.Eq
-import Data.HeytingAlgebra
-import Data.Function
+import Data.List (List(..), any, filter, fromFoldable, head, nubBy)
+import Data.Maybe (Maybe)
+import Control.Monad.Eff (Eff)
 
 type Address =
   { 
@@ -33,6 +31,7 @@ type Name =
 
 type AddressBook = List Entry
 
+main :: forall t. Eff ( "console" :: Console.CONSOLE | t ) Unit
 main = do
   Console.log "hello world"
 

@@ -3,18 +3,14 @@ module ExercisesChapter5
     main
   ) where
 
+import Prelude
 import Control.Monad.Eff.Console as Console
-import Data.Semiring
-import Data.Ring
-import Data.Eq
-import Data.Maybe
-import Data.HeytingAlgebra
-import Data.Function
-import Math
-import Data.Foldable
-import Data.Show
-import Data.Semigroup
+import Data.Maybe (Maybe(..))
+import Data.Foldable (foldl)
+import Math (pi)
+import Control.Monad.Eff (Eff)
 
+main :: forall t. Eff ( "console" :: Console.CONSOLE | t ) Unit
 main = do
   Console.log "hello world"
 

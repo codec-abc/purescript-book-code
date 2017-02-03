@@ -3,30 +3,19 @@ module ExercisesChapter4
     main
   ) where
 
-import Data.Ring
-import Data.Function
-import Data.Show
-import Data.Maybe
-import Data.Functor
-import Data.Ord
-import Data.Eq
-import Data.HeytingAlgebra
-import Data.EuclideanRing
-import Data.Int
-import Math
-import Control.MonadZero
-import Partial.Unsafe
-import Control.Bind as Bind
+import Prelude
+import Data.Maybe (Maybe(..), fromJust)
+import Data.Int (toNumber)
+import Math ((%))
+import Control.MonadZero (guard)
+import Partial.Unsafe (unsafePartial)
 import Control.Monad.Eff.Console as Console
 import Data.Array as Array
-import Control.Monad (ap)
-import Data.Array (updateAt)
-import Data.Either.Nested (in1)
-import Data.List.Lazy (nubBy, repeat, take)
-import Node.Buffer (BufferValueType(..))
-import Prelude (class BooleanAlgebra)
+import Data.List.Lazy (repeat, take)
+import Control.Monad.Eff (Eff)
 
 
+main :: forall t. Eff ( "console" :: Console.CONSOLE | t) Unit
 main = do
   Console.log $ show $ factors $ 2 * 3 * 4 * 5
 
@@ -60,9 +49,7 @@ square = (<$>) (\x -> x * x)
 filterOutNegative :: Array Int -> Array Int
 filterOutNegative = (<$?>) (\x -> x >= 0)
 
-filter_ = Array.filter
-
-infixl 4 filter_ as <$?>
+infixl 4 Array.filter as <$?>
 
 cartesianProduct :: Array Int -> Array Int -> Array (Array Int)
 cartesianProduct a b = do

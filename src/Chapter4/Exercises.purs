@@ -13,20 +13,22 @@ import Data.Eq
 import Data.HeytingAlgebra
 import Data.EuclideanRing
 import Data.Int
-import Data.List.Lazy
 import Math
 import Control.MonadZero
 import Partial.Unsafe
 import Control.Bind as Bind
 import Control.Monad.Eff.Console as Console
 import Data.Array as Array
+import Control.Monad (ap)
+import Data.Array (updateAt)
 import Data.Either.Nested (in1)
+import Data.List.Lazy (nubBy, repeat, take)
 import Node.Buffer (BufferValueType(..))
 import Prelude (class BooleanAlgebra)
 
 
 main = do
-  Console.log $ show $ pythagoreanTriple (2 * 3 * 5 * 7 * 2)
+  Console.log $ show $ factors $ 2 * 3 * 4 * 5
 
 isEvenInteger :: Int -> Boolean
 isEvenInteger x =
@@ -115,21 +117,61 @@ firstFactor2 n a =
     else 
       firstFactor2 n (a + 1)
 
-factors2 :: Int -> Array Int -> Array Int
-factors2 n arr =
+decomposeInPrimeFactors_ :: Int -> Array Int -> Array Int
+decomposeInPrimeFactors_ n arr =
   let 
     firstFactorOfNMaybe = firstFactor n
   in case firstFactorOfNMaybe of
     Nothing -> 
       arr
     Just x ->
-      factors2 (n/x) $ Array.cons x arr 
+      decomposeInPrimeFactors_ (n/x) $ Array.cons x arr 
 
-factors :: Int -> Array Int
-factors n = factors2 n []
+decomposeInPrimeFactors :: Int -> Array Int
+decomposeInPrimeFactors n = decomposeInPrimeFactors_ n []
 
 areAllValuesTrue :: Array Boolean -> Boolean
-areAllValuesTrue = foldl (&&) true
+areAllValuesTrue = Array.foldl (&&) true
 
 count_ :: forall a. (a -> Boolean) -> Array a -> Int
-count_ f = foldl (\ accum x -> if f(x) then accum + 1 else accum) 0
+count_ f = Array.foldl (\ accum x -> if f(x) then accum + 1 else accum) 0
+
+factorsPermutations :: Array Int -> Array (Array Int)
+factorsPermutations a = let length_ = Array.length a in
+  case length_ of
+    0 -> [a]
+    1 -> [a]
+    2 -> [a]
+    _ -> 
+      let 
+        firstElem = unsafePartial fromJust $ Array.head a
+        tail_ = unsafePartial fromJust $ Array.tail a
+        permutationsForThisLevel = factorsPermutations_ tail_ firstElem
+        permutationsForLowerLevels = do 
+          w <- permutationsForThisLevel
+          factorsPermutations w
+      in
+        Array.union (Array.cons a permutationsForThisLevel) permutationsForLowerLevels
+
+factorsPermutations_ :: Array Int -> Int -> Array (Array Int)
+factorsPermutations_ a b =
+  let
+    arrayLength = Array.length a
+    repeatedArray = Array.fromFoldable (take arrayLength $ repeat a)
+    y = Array.fromFoldable (take arrayLength $ repeat 1)
+    --z = Array.range 0 (arrayLength - 1) >>= 
+    --  \x -> [unsafePartial fromJust $ Array.updateAt x b y]
+    z = do
+      w <- Array.range 0 (arrayLength - 1)
+      [unsafePartial fromJust $ Array.updateAt w b y]
+  in Array.zipWith f repeatedArray z
+    where f = Array.zipWith (\i j -> i * j)
+
+factors :: Int -> Array (Array Int)
+factors a = 
+  let 
+    allPermutations = factorsPermutations $ decomposeInPrimeFactors a
+    sortedPerm = map Array.sort allPermutations
+  in 
+    Array.nubBy (==) sortedPerm
+

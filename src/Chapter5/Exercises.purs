@@ -1,4 +1,4 @@
-module Excercises5
+module ExercisesChapter5
   (
     main
   ) where

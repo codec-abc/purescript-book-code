@@ -9,6 +9,11 @@ import Data.List (List(..), any, filter, fromFoldable, head, nubBy)
 import Data.Maybe (Maybe)
 import Control.Monad.Eff (Eff)
 
+
+main :: forall t. Eff ( "console" :: Console.CONSOLE | t ) Unit
+main = do
+  Console.log "hello world"
+
 type Address =
   { 
     street :: String,
@@ -30,10 +35,6 @@ type Name =
   }
 
 type AddressBook = List Entry
-
-main :: forall t. Eff ( "console" :: Console.CONSOLE | t ) Unit
-main = do
-  Console.log "hello world"
 
 showEntry :: Entry -> String
 showEntry entry = 

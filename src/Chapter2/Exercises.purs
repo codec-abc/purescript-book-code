@@ -12,6 +12,7 @@ import Global as G
 import Math as M
 import Node.ReadLine as Rl
 
+
 main :: forall t4.                  
   Eff                       
     ( "readline" :: READLINE
@@ -39,10 +40,5 @@ main = do
 circleArea :: Number -> Number
 circleArea x = M.pi * x
 
-printPromp :: forall t1.                
-  Eff                     
-    ( "console" :: Console.CONSOLE
-    | t1                  
-    )                     
-    Unit
+printPromp :: forall t1. Eff ( "console" :: Console.CONSOLE | t1 )  Unit
 printPromp = Console.log "Input a radius to get perimeter or type exit to quit"
